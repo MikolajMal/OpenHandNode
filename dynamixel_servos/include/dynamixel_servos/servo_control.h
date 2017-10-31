@@ -13,6 +13,7 @@
 #include <stdio.h>
 
 #include <ros/ros.h>
+#include <signal.h>
 #include "dynamixel_sdk/dynamixel_sdk.h"                                 // Uses Dynamixel SDK library
 #include "dynamixel_servos/InfoMessage.h"
 #include "dynamixel_servos/CommandMessage.h"
@@ -27,10 +28,11 @@
 #define PROTOCOL_VERSION                2.0                 // See which protocol version is used in the Dynamixel
 
 // Default setting
-#define DXL_ID                          21                   // Dynamixel ID: 1
 #define BAUDRATE                        3000000
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
                                                             // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0" Mac: "/dev/tty.usbserial-*"
+#define FIRST_ID						21
+#define SERVOS_NUMBER					3
 
 #define TORQUE_ENABLE                   1                   // Value for enabling the torque
 #define TORQUE_DISABLE                  0                   // Value for disabling the torque
@@ -40,6 +42,7 @@
 
 
 #define ESC_ASCII_VALUE                 0x1b
+
 
 
 enum Commands
@@ -65,18 +68,19 @@ class ServoControl
 
   int getch(void);
   int kbhit(void);
-
-  bool open_port();
-  bool set_baudrate();
   
   public:
+  
+  bool open_port();
+  bool set_baudrate();
+  bool close_port();
+  
   void enable_torque(uint8_t servo_id);
   void disable_torque(uint8_t servo_id);
   void write_goal_position(uint8_t servo_id, uint32_t goal_position);
   void test();
   uint32_t read_present_position(uint8_t servo_id);
   uint16_t read_present_current_value(uint8_t servo_id);
-  
   void command_callback(const dynamixel_servos::CommandMessage::ConstPtr& msg);
 
 };

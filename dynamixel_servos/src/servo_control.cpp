@@ -5,13 +5,11 @@ ServoControl::ServoControl()
 {
   portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME);
   packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
-  open_port();
-  set_baudrate();
 }
 
 ServoControl::~ServoControl()
 {
-
+	
 }
 
 bool ServoControl::open_port()
@@ -25,10 +23,17 @@ bool ServoControl::open_port()
   else
   {
     printf("Failed to open the port!\n");
-    printf("Press any key to terminate...\n");
+    printf("Press any key to continue...\n");
     getch();
     return false;
   }
+}
+
+bool ServoControl::close_port()
+{
+  
+  // Close port
+  portHandler->closePort();
 }
 
 bool ServoControl::set_baudrate()
@@ -42,7 +47,7 @@ bool ServoControl::set_baudrate()
   else
   {
     printf("Failed to change the baudrate!\n");
-    printf("Press any key to terminate...\n");
+    printf("Press any key to continue...\n");
     getch();
     return false;
   }
@@ -208,51 +213,54 @@ void ServoControl::command_callback(const dynamixel_servos::CommandMessage::Cons
 	ROS_INFO("I heard: [%d]", msg->servo_id);
 }
 
+void sigintHandler(int sig)
+{
+	ServoControl servos;
+	
+	// Disable Torque
+	for (int i = FIRST_ID; i < FIRST_ID + SERVOS_NUMBER; i++)
+	servos.disable_torque(i);
+	
+	// Close serial port
+	servos.close_port();
+	
+	ROS_INFO("Shutting down");
+	ros::shutdown();
+}
 
 int main(int argc, char **argv)
 {
   ServoControl servos;
-    
+  servos.open_port();
+  servos.set_baudrate();
+  
   ros::init(argc, argv, "servo_control");
   ros::NodeHandle n;
   ros::Publisher servo_publisher = n.advertise<dynamixel_servos::InfoMessage>("servo_control_info", 1000);
   ros::Subscriber servo_subscriber = n.subscribe("servo_control_commands",1000, &ServoControl::command_callback, &servos);
   ros::Rate loop_rate(10);
- 
-  int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-  int dxl_goal_position[2] = {DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE};         // Goal position
-
-  uint8_t dxl_error = 0;                          // Dynamixel error
-  int32_t dxl_present_position = 0;               // Present position
-   
- // servo.test();
- servos.enable_torque(23);
- servos.disable_torque(22);
-  servos.disable_torque(21);
   
-  while(1)
+  // Override the default ros sigint (CTRL + C) handler.
+  signal(SIGINT, sigintHandler);
+
+  //for (int i = FIRST_ID; i < FIRST_ID + SERVOS_NUMBER; i++)
+	//servos.enable_torque(i);
+  
+  while(ros::ok())
   {    
 	  
-	 // for (uint8_t i=0; i < 3; i++)
-	  //{
-	//	  my_dynamixel::InfoMessage msg;
-	//	  msg.servo_id = 21+i;
-	//	  msg.present_position = servos.read_present_position(21+i);
-	//	  servo_publisher.publish(msg); 	
-	 // }
-	 
-	 dynamixel_servos::InfoMessage msg;
-	 msg.servo_id = 23;
-	 msg.present_position = servos.read_present_position(23);
-	 msg.present_current = servos.read_present_current_value(23);
-	 servo_publisher.publish(msg); 
-	  
-    ros::spinOnce(); 	
-    loop_rate.sleep();
+	for (int id = FIRST_ID; id < FIRST_ID + SERVOS_NUMBER; id++)
+	{
+		dynamixel_servos::InfoMessage msg;
+		msg.servo_id = id;
+		msg.present_position = servos.read_present_position(id);
+		msg.present_current = servos.read_present_current_value(id);
+		servo_publisher.publish(msg); 	
+	}
+	   
+	ros::spinOnce(); 	
+	loop_rate.sleep();
   }
-  // Nie wchodzi
-  servos.disable_torque(21);
-  servos.disable_torque(22);
-  servos.disable_torque(23);
+  
   return 0;
 }

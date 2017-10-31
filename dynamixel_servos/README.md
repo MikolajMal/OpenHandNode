@@ -15,21 +15,21 @@ git clone https://github.com/LRMPUT/OpenHandNode
 ### Skopiowanie folderu dynamixel_servos do katalogu catkin_ws
 
 ```
-cp ./OpenHandNode/dynamixel_servos  ../catkin_ws // Zależnie od lokalizacji katalogu catkin_ws
+cp ./OpenHandNode/dynamixel_servos  ../catkin_ws
 ```
 
 ### Kompilacja węzła dynamixel_servos
 
 ```
-cd ../catkin_ws // Zależnie od lokalizacji katalogu catkin_ws
+cd ../catkin_ws
 catkin_make
-source /opt/ros/kinetic/setup.bash
 source ../catkin_ws/devel/setup.bash
 ```
 
 ### Uruchomienie węzła dynamixel_servos
 
 ```
+roscore
 rosrun dynamixel_servos servo_control 
 ```
 
@@ -42,8 +42,19 @@ rostopic echo /servo_control_info
 ### Wysłanie wiadomości do topic'u - przykładowo zadanie pozycji serwa o id = 21 :
 
 ```
+rostopic pub /servo_control_commands dynamixel_servos/CommandMessage "command: 1
+servo_id: 21
+value: 0" 
+
 rostopic pub /servo_control_commands dynamixel_servos/CommandMessage "command: 2
 servo_id: 21
 value: 2000" 
  
+```
+gdzie **command** przyjmuje wartości:
+
+```
+disableTorque = 0,
+enableTorque = 1,
+writeGoalPosition = 2
 ```
