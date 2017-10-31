@@ -39,7 +39,7 @@ rosrun dynamixel_servos servo_control
 rostopic echo /servo_control_info 
 ```
 
-### Wysłanie wiadomości do topic'u np. włączenie momentu oraz zadanie pozycji serwa o id = 21 :
+### Wysłanie wiadomości do topic'u np. włączenie momentu oraz zadanie pozycji serwa o id=21 :
 
 ```
 rostopic pub /servo_control_commands dynamixel_servos/CommandMessage "command: 1
