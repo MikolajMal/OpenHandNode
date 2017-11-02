@@ -15,7 +15,7 @@ $ git clone https://github.com/LRMPUT/OpenHandNode
 ### Skopiowanie folderu dynamixel_servos do katalogu catkin_ws:
 
 ```
-$ cp ./OpenHandNode/dynamixel_servos  ../catkin_ws
+$ cp ./OpenHandNode/dynamixel_servos  ../catkin_ws -r
 ```
 
 ### Kompilacja węzła dynamixel_servos:
