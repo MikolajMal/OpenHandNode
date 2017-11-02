@@ -54,19 +54,17 @@ register_address: 64
 bytes_number: 1
 value: 1" 
 ```
-
-###### Zadanie pozycji serwa:
+##### Zadanie pozycji serwa:
 ```
 $ rostopic pub /servo_control_commands dynamixel_servos/CommandMessage "servo_id: 21
 register_address: 116
 bytes_number: 4
 value: 2000" 
 ```
-
 gdzie: 
-**servo_id** - ID serwa
-**register_address** - Adres rejestru
-**bytes_number** - Rozmiar rejestru
+**servo_id** - ID serwa  
+**register_address** - Adres rejestru  
+**bytes_number** - Rozmiar rejestru  
 **value** - Wartość do zapisania
 
 [Tabela zawierająca adresy oraz rozmiary rejestrów](http://support.robotis.com/en/product/actuator/dynamixel_x/xm_series/xm430-w210.htm#bookmark23) 
