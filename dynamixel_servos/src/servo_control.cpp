@@ -14,7 +14,6 @@ ServoControl::~ServoControl()
 
 bool ServoControl::open_port()
 {
-  
   // Open port
   if (portHandler->openPort())
   {
@@ -31,14 +30,12 @@ bool ServoControl::open_port()
 
 bool ServoControl::close_port()
 {
-  
   // Close port
   portHandler->closePort();
 }
 
 bool ServoControl::set_baudrate()
-{
-	
+{	
   // Set port baudrate
   if (portHandler->setBaudRate(BAUDRATE))
   {
@@ -53,12 +50,29 @@ bool ServoControl::set_baudrate()
   }
 }
 
+
+void ServoControl::write_goal_position(uint8_t servo_id, uint32_t goal_position)
+{
+	// Write goal position
+	uint8_t dxl_error = 0;
+    int dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, servo_id, ADDR_PRO_goal_position, goal_position, &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS)
+    {
+		packetHandler->printTxRxResult(dxl_comm_result);
+    }
+    else if (dxl_error != 0)
+    {
+		packetHandler->printRxPacketError(dxl_error);
+    }
+	
+}
+
 uint32_t ServoControl::read_present_position(uint8_t servo_id)
 {
 	// Read present position
 	uint32_t present_position;
 	uint8_t dxl_error;
-    int dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, servo_id, ADDR_PRO_PRESENT_POSITION, (uint32_t*)& present_position, &dxl_error);
+    int dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, servo_id, ADDR_PRO_present_position, (uint32_t*)& present_position, &dxl_error);
     if (dxl_comm_result != COMM_SUCCESS)
     {
 		packetHandler->printTxRxResult(dxl_comm_result);
@@ -72,28 +86,13 @@ uint32_t ServoControl::read_present_position(uint8_t servo_id)
 
 }
 
-void ServoControl::write_goal_position(uint8_t servo_id, uint32_t goal_position)
-{
-	// Write goal position
-	uint8_t dxl_error = 0;
-    int dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, servo_id, ADDR_PRO_GOAL_POSITION, goal_position, &dxl_error);
-    if (dxl_comm_result != COMM_SUCCESS)
-    {
-		packetHandler->printTxRxResult(dxl_comm_result);
-    }
-    else if (dxl_error != 0)
-    {
-		packetHandler->printRxPacketError(dxl_error);
-    }
-	
-}
-
-uint16_t ServoControl::read_present_current_value(uint8_t servo_id)
+uint16_t ServoControl::read_present_current(uint8_t servo_id)
 {
 	// Read present current
-	uint32_t present_current;
+	uint16_t present_current;
 	uint8_t dxl_error;
-    int dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, servo_id, ADDR_PRO_CURRENT_VALUE, (uint16_t*)& present_current, &dxl_error);
+	
+    int dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, servo_id, ADDR_PRO_present_current, (uint16_t*)& present_current, &dxl_error);
     if (dxl_comm_result != COMM_SUCCESS)
     {
 		packetHandler->printTxRxResult(dxl_comm_result);
@@ -106,11 +105,30 @@ uint16_t ServoControl::read_present_current_value(uint8_t servo_id)
     return present_current;
 }
 
+uint32_t ServoControl::read_present_velocity(uint8_t servo_id)
+{
+	// Read present velocity
+	uint32_t present_velocity;
+	uint8_t dxl_error;
+	
+    int dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, servo_id, ADDR_PRO_present_velocity, (uint32_t*)& present_velocity, &dxl_error);
+    if (dxl_comm_result != COMM_SUCCESS)
+    {
+		packetHandler->printTxRxResult(dxl_comm_result);
+    }
+    else if (dxl_error != 0)
+    {
+		packetHandler->printRxPacketError(dxl_error);
+    }
+    
+    return  present_velocity;
+}
+
 void ServoControl::enable_torque(uint8_t servo_id)
 {
 	// Enable Dynamixel Torque
 	uint8_t dxl_error = 0;
-	int dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, servo_id, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, &dxl_error);
+	int dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, servo_id, ADDR_PRO_torque_enable, TORQUE_ENABLE, &dxl_error);
 	if (dxl_comm_result != COMM_SUCCESS)
     {
 		packetHandler->printTxRxResult(dxl_comm_result);
@@ -119,22 +137,13 @@ void ServoControl::enable_torque(uint8_t servo_id)
     {
 		packetHandler->printRxPacketError(dxl_error);
     }
-	else
-	{
-		printf("Dynamixel has been successfully connected \n");
-	}
-}
-
-void ServoControl::test()
-{
-	printf("Dynamixel has been successfully connected \n");
 }
 
 void ServoControl::disable_torque(uint8_t servo_id)
 {
 	// Disable Dynamixel Torque
 	uint8_t  dxl_error = 0;
-	int dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, servo_id, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE, &dxl_error);
+	int dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, servo_id, ADDR_PRO_torque_enable, TORQUE_DISABLE, &dxl_error);
 	if (dxl_comm_result != COMM_SUCCESS)
     {
 		packetHandler->printTxRxResult(dxl_comm_result);
@@ -143,6 +152,35 @@ void ServoControl::disable_torque(uint8_t servo_id)
     {
 		packetHandler->printRxPacketError(dxl_error);
     }
+}
+
+void ServoControl::write_register(uint8_t servo_id, uint8_t address, uint8_t bytes_number, uint32_t value)
+{
+  uint8_t dxl_error = 0;
+  int dxl_comm_result = COMM_TX_FAIL;
+
+  if (bytes_number   == 1)
+  {
+    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, servo_id, address, (uint8_t)value, &dxl_error);
+  }
+  else if (bytes_number == 2)
+  {
+    dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, servo_id, address, (uint16_t)value, &dxl_error);
+  }
+  else if (bytes_number == 4)
+  {
+    dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, servo_id, address, (uint32_t)value, &dxl_error);
+  }
+  
+  if (dxl_comm_result != COMM_SUCCESS)
+  {
+	packetHandler->printTxRxResult(dxl_comm_result);
+  }
+  else if (dxl_error != 0)
+  {
+	packetHandler->printRxPacketError(dxl_error);
+  }
+  
 }
 
 int ServoControl::getch()
@@ -195,22 +233,10 @@ int ServoControl::kbhit(void)
 
 void ServoControl::command_callback(const dynamixel_servos::CommandMessage::ConstPtr& msg)
 {
-	switch(msg->command)
-	{
-		case Commands(disableTorque) :
-			this->disable_torque(msg->servo_id);
-		break;
-		
-		case Commands(enableTorque) :
-			this->enable_torque(msg->servo_id);
-		break;
-		
-		case Commands(writeGoalPosition):
-			this->write_goal_position(msg->servo_id, msg->value);
-		
-		break;
-	}
-	ROS_INFO("I heard: [%d]", msg->servo_id);
+	
+	this->write_register(msg->servo_id, msg->register_address, msg->bytes_number, msg->value);
+	
+	//ROS_INFO("Register address [msg->register_address] changed to: %d", msg->register_address, msg->value);
 }
 
 void sigintHandler(int sig)
@@ -231,8 +257,8 @@ void sigintHandler(int sig)
 int main(int argc, char **argv)
 {
   ServoControl servos;
-  servos.open_port();
-  servos.set_baudrate();
+//  servos.open_port();
+ // servos.set_baudrate();
   
   ros::init(argc, argv, "servo_control");
   ros::NodeHandle n;
@@ -252,9 +278,11 @@ int main(int argc, char **argv)
 	for (int id = FIRST_ID; id < FIRST_ID + SERVOS_NUMBER; id++)
 	{
 		dynamixel_servos::InfoMessage msg;
-		msg.servo_id = id;
+		msg.servo_id = id;		
+		msg.present_current = servos.read_present_current(id);
+		msg.present_velocity = servos.read_present_velocity(id);
 		msg.present_position = servos.read_present_position(id);
-		msg.present_current = servos.read_present_current_value(id);
+			
 		servo_publisher.publish(msg); 	
 	}
 	   
