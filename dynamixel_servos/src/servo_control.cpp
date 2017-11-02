@@ -257,8 +257,8 @@ void sigintHandler(int sig)
 int main(int argc, char **argv)
 {
   ServoControl servos;
-//  servos.open_port();
- // servos.set_baudrate();
+  servos.open_port();
+  servos.set_baudrate();
   
   ros::init(argc, argv, "servo_control");
   ros::NodeHandle n;
