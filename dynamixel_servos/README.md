@@ -61,11 +61,11 @@ register_address: 116
 bytes_number: 4
 value: 2000" 
 ```
-gdzie: 
+gdzie:  
 **servo_id** - ID serwa  
-**register_address** - Adres rejestru  
-**bytes_number** - Rozmiar rejestru  
-**value** - Wartość do zapisania
+**register_address** - adres rejestru  
+**bytes_number** - rozmiar rejestru  
+**value** - wartość do wpisania
 
 [Tabela zawierająca adresy oraz rozmiary rejestrów](http://support.robotis.com/en/product/actuator/dynamixel_x/xm_series/xm430-w210.htm#bookmark23) 
 
