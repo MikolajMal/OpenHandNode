@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<robot name="chwytak">
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://wezelROS/description/meshes/base.stl"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
+    </visual>
+  </link>
+
+  <link name="palec1_obrot">
+    <visual>
+      <geometry>
+        <mesh filename="package://wezelROS/description/meshes/finger_base.stl"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+    </visual>
+  </link>
+
+  <link name="palec2_obrot">
+    <visual>
+      <geometry>
+        <mesh filename="package://wezelROS/description/meshes/finger_base.stl"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
+    </visual>
+  </link>
+
+  <link name="palec3_obrot">
+    <visual>
+      <geometry>
+        <mesh filename="package://wezelROS/description/meshes/finger_base.stl"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
+    </visual>
+  </link>
+
+  <link name="palec1">
+    <visual>
+      <geometry>
+        <mesh filename="package://wezelROS/description/meshes/finger.stl"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+    </visual>
+  </link>
+
+  <link name="palec2">
+    <visual>
+      <geometry>
+        <mesh filename="package://wezelROS/description/meshes/finger.stl"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
+    </visual>
+  </link>
+  <link name="palec3">
+    <visual>
+      <geometry>
+        <mesh filename="package://wezelROS/description/meshes/finger.stl"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
+    </visual>
+  </link>
+
+  <joint name="swivel1" type="fixed">
+    <parent link="base_link"/>
+    <child link="palec1_obrot"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="0 0.04 0.021352"/>
+    <limit lower="-1.57" upper="1.57" effort="30" velocity="5"/>
+  </joint>
+
+  <joint name="swivel2" type="continuous">
+    <parent link="base_link"/>
+    <child link="palec2_obrot"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.026 -0.030397 0.021352" rpy="0 0 0.1185"/>
+    <limit lower="-1.57" upper="1.57" effort="30" velocity="5"/>
+  </joint>
+
+  <joint name="swivel3" type="continuous">
+    <parent link="base_link"/>
+    <child link="palec3_obrot"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="-0.026 -0.030397 0.021352" rpy="0 0 -0.1185"/>
+    <limit lower="-1.57" upper="1.57" effort="30" velocity="5"/>
+    <mimic joint="swivel2" multiplier="-1"/>
+  </joint>
+
+  <joint name="swivelpalec" type="revolute">
+    <parent link="palec1_obrot"/>
+    <child link="palec1"/>
+    <axis xyz="1 0 0"/>
+    <origin xyz="0 0 0"/>
+    <limit lower="-1" upper="1.57" effort="30" velocity="5"/>
+  </joint>
+
+  <joint name="swivelpalec2" type="revolute">
+    <parent link="palec2_obrot"/>
+    <child link="palec2"/>
+    <axis xyz="1 0 0"/>
+    <origin xyz="0 0 0"/>
+    <limit lower="-1.57" upper="1" effort="30" velocity="5"/>
+  </joint>
+
+  <joint name="swivelpalec3" type="revolute">
+    <parent link="palec3_obrot"/>
+    <child link="palec3"/>
+    <axis xyz="1 0 0"/>
+    <origin xyz="0 0 0"/>
+    <limit lower="-1.57" upper="1" effort="30" velocity="5"/>
+  </joint>
+
+</robot>
