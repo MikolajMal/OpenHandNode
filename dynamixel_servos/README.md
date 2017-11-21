@@ -26,6 +26,13 @@ $ catkin_make
 $ source ../catkin_ws/devel/setup.bash
 ```
 
+### Dodanie użytkownika do grupy dialout
+
+```
+sudo usermod -a -G dialout $USER
+```
+Po wywołaniu powyższej komendy konieczne jest ponowne uruchomienie systemu
+
 ### Uruchomienie węzła dynamixel_servos:
 
 ```
