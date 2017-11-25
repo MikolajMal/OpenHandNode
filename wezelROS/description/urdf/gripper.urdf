@@ -4,7 +4,7 @@
   <link name="base_link">
     <visual>
       <geometry>
-        <mesh filename="package://wezelROS/description/meshes/base.stl"/>
+        <mesh filename="package://wezelROS/description/meshes/base.dae"/>
       </geometry>
       <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
     </visual>
@@ -13,7 +13,7 @@
   <link name="rotator_link1">
     <visual>
       <geometry>
-        <mesh filename="package://wezelROS/description/meshes/finger_rotator.stl"/>
+        <mesh filename="package://wezelROS/description/meshes/finger_rotator.dae"/>
       </geometry>
       <origin xyz="0 0 0" rpy="1.57 0 0"/>
     </visual>
@@ -22,7 +22,7 @@
   <link name="rotator_link2">
     <visual>
       <geometry>
-        <mesh filename="package://wezelROS/description/meshes/finger_rotator.stl"/>
+        <mesh filename="package://wezelROS/description/meshes/finger_rotator.dae"/>
       </geometry>
       <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
     </visual>
@@ -31,7 +31,7 @@
   <link name="rotator_link3">
     <visual>
       <geometry>
-        <mesh filename="package://wezelROS/description/meshes/finger_rotator.stl"/>
+        <mesh filename="package://wezelROS/description/meshes/finger_rotator.dae"/>
       </geometry>
       <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
     </visual>
@@ -40,7 +40,7 @@
   <link name="finger_link1">
     <visual>
       <geometry>
-        <mesh filename="package://wezelROS/description/meshes/finger.stl"/>
+        <mesh filename="package://wezelROS/description/meshes/finger.dae"/>
       </geometry>
       <origin xyz="0 0 0" rpy="1.57 0 0"/>
     </visual>
@@ -49,16 +49,16 @@
   <link name="finger_link2">
     <visual>
       <geometry>
-        <mesh filename="package://wezelROS/description/meshes/finger.stl"/>
+        <mesh filename="package://wezelROS/description/meshes/finger.dae"/>
       </geometry>
       <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
     </visual>
   </link>
-  
+
   <link name="finger_link3">
     <visual>
       <geometry>
-        <mesh filename="package://wezelROS/description/meshes/finger.stl"/>
+        <mesh filename="package://wezelROS/description/meshes/finger.dae"/>
       </geometry>
       <origin xyz="0 0 0" rpy="1.57 0 3.14"/>
     </visual>
