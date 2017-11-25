@@ -1,6 +1,6 @@
 <launch>
 
-  <arg name="model" default="$(find wezelROS)/description/urdf/chwytak.urdf"/>
+  <arg name="model" default="$(find wezelROS)/description/urdf/gripper.urdf"/>
   <arg name="gui" default="true" />
   <arg name="rvizconfig" default="$(find wezelROS)/etc/urdf.rviz" />
 
