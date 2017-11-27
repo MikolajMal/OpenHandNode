@@ -11,33 +11,16 @@
 #define servo3ID 23
 #define servo4ID 24
 
-#define posMul 1
+#define posMul 0.00007773
+#define posBias 0
 #define velMul 1
-#define torqMul 1
-
-
+#define torqMul 0.0008382
 
 using namespace std;
-
-
-
-
-
-
 
 void receive_msg_from_ros(const open_hand_controller::ros_to_contr& msg);
 void receive_msg_from_servo(const dynamixel_servos::InfoMessage& msg);
 void prepare_msg_to_ros(open_hand_controller::contr_to_ros& msg);
-
-
-
-
-
-
-
-
-
-
 
 
 class dynamixelServo
@@ -83,22 +66,29 @@ void dynamixelServo::set_id(int value)
 }
 void dynamixelServo::set_position_to_change(float value)
 {
-    if(enable)
+    if(this->enable)
     {
         this->position_to_change = value;
         dynamixel_servos::CommandMessage CommandMessage;
         CommandMessage.servo_id = this->id;
         CommandMessage.register_address = 116;
-        CommandMessage.bytes_number = 4;
-        CommandMessage.value = value / posMul;
+        CommandMessage.bytes_number = 4;     
+        CommandMessage.value = (int)((value - posBias) / posMul);
         publisher_to_servo.publish(CommandMessage);
     }
 }
 void dynamixelServo::set_torque_to_change(float value)
 {
-    if(enable)
+    if(this->enable)
     {
-        torque_to_change=value;
+        this->torque_to_change=value;
+
+        dynamixel_servos::CommandMessage CommandMessage;
+        CommandMessage.servo_id = this->id;
+        CommandMessage.register_address = 38;
+        CommandMessage.bytes_number = 2;
+        CommandMessage.value = (int)(value / torqMul);
+        publisher_to_servo.publish(CommandMessage);
     }
 }
 void dynamixelServo::activate_servo()
@@ -124,7 +114,7 @@ void dynamixelServo::deactivate_servo()
 }
 void dynamixelServo::set_actual_position(int value)
 {
-    this->actual_position = value * posMul;
+    this->actual_position = value * posMul + posBias;
 }
 void dynamixelServo::set_actual_velocity(int value)
 {
@@ -150,14 +140,6 @@ void dynamixelServo::set_publisher_to_servo(ros::Publisher& handler)
 {
     this->publisher_to_servo = handler;
 }
-
-
-
-
-
-
-
-
 
 
 dynamixelServo Servo[4];
@@ -199,15 +181,6 @@ int main(int argc, char **argv)
     }
 }
 
-
-
-
-
-
-
-
-
-
 void receive_msg_from_ros(const open_hand_controller::ros_to_contr& msg)
 {
     if(msg.enable1) Servo[0].activate_servo();
@@ -227,10 +200,34 @@ void receive_msg_from_ros(const open_hand_controller::ros_to_contr& msg)
     Servo[2].set_position_to_change(msg.Position3);
     Servo[3].set_position_to_change(msg.Position4);
 
-    Servo[0].set_torque_to_change(msg.Torque1);
-    Servo[1].set_torque_to_change(msg.Torque2);
-    Servo[2].set_torque_to_change(msg.Torque3);
-    Servo[3].set_torque_to_change(msg.Torque4);
+    
+    if (msg.Torque1 > 1)
+        Servo[0].set_torque_to_change(1);
+    else if (msg.Torque1 <0)
+        Servo[0].set_torque_to_change(0);
+    else
+        Servo[0].set_torque_to_change(msg.Torque1);
+
+    if (msg.Torque2 > 1)
+        Servo[1].set_torque_to_change(1);
+    else if (msg.Torque2 <0)
+        Servo[1].set_torque_to_change(0);
+    else
+        Servo[1].set_torque_to_change(msg.Torque2);
+
+    if (msg.Torque3 > 1)
+        Servo[2].set_torque_to_change(1);
+    else if (msg.Torque3 <0)
+        Servo[2].set_torque_to_change(0);
+    else
+        Servo[2].set_torque_to_change(msg.Torque3);
+
+    if (msg.Torque4 > 1)
+        Servo[3].set_torque_to_change(1);
+    else if (msg.Torque4 <0)
+        Servo[3].set_torque_to_change(0);
+    else
+        Servo[3].set_torque_to_change(msg.Torque4);
 }
 
 void receive_msg_from_servo(const dynamixel_servos::InfoMessage& msg)
@@ -238,7 +235,6 @@ void receive_msg_from_servo(const dynamixel_servos::InfoMessage& msg)
 
      switch((int)msg.servo_id)
      {
-    // case servo1ID:
      case servo1ID:
      {
          Servo[0].set_actual_position(msg.present_position);
@@ -247,7 +243,6 @@ void receive_msg_from_servo(const dynamixel_servos::InfoMessage& msg)
          break;
      }
 
-     //case servo2ID:
      case servo2ID:
      {
          Servo[1].set_actual_position(msg.present_position);
@@ -256,7 +251,6 @@ void receive_msg_from_servo(const dynamixel_servos::InfoMessage& msg)
          break;
      }
 
-     //case servo3ID:
      case servo3ID:
      {
          Servo[2].set_actual_position(msg.present_position);
@@ -265,7 +259,6 @@ void receive_msg_from_servo(const dynamixel_servos::InfoMessage& msg)
          break;
      }
 
-     //case servo4ID:
      case servo4ID:
      {
          Servo[3].set_actual_position(msg.present_position);
