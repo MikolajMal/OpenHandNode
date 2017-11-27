@@ -13,7 +13,7 @@
 
 #define posMul 0.00007773
 #define posBias 0
-#define velMul 1
+#define velMul 0.02398
 #define torqMul 0.0008382
 
 using namespace std;
