@@ -11,7 +11,7 @@
 #define servo3ID 23
 #define servo4ID 24
 
-#define posMul 0.00007773
+#define posMul 0.00007672
 #define posBias 0
 #define velMul 0.02398
 #define torqMul 0.0008382
