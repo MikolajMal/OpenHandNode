@@ -77,8 +77,8 @@
 #define BAUDRATE                        3000000
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
                                                             // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0" Mac: "/dev/tty.usbserial-*"
-#define FIRST_ID						21
-#define SERVOS_NUMBER					3
+#define FIRST_ID					21
+#define SERVOS_NUMBER					4
 
 #define TORQUE_ENABLE                   1                   // Value for enabling the torque
 #define TORQUE_DISABLE                  0                   // Value for disabling the torque
