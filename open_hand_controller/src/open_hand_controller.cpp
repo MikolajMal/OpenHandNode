@@ -17,6 +17,26 @@
 #define velMul 0.02398
 #define torqMul 0.0008382
 
+#define posMax 3.14
+#define posMin 0
+
+/*
+Wersja z osobnymi ograniczeniami dla kazdego serwa
+
+#define pos1Max 3.14
+#define pos1Min 0
+
+#define pos2Max 3.14
+#define pos2Min 0
+
+#define pos3Max 3.14
+#define pos3Min 0
+
+#define pos4Max 3.14
+#define pos4Min 0
+
+*/
+
 #define open_position 3
 #define close_position 4
 
@@ -74,12 +94,66 @@ void dynamixelServo::set_position_to_change(float value)
 {
     if(this->enable)
     {
+        if (value > posMax)
+			this->position_to_change = posMax;
+		else if (value < posMin)
+			this->position_to_change = posMin;
+		else
+        this->position_to_change=value;
+
+        /*
+        Wersja z osobnymi ograniczeniami dla kazdego serwa
+        
+        float posMax = 0;
+		float posMin = 0;
+		
+		switch(this->id)
+		{
+			case servo1ID:
+			{
+				posMax = pos1Max;
+				posMin = pos1Min;			
+				break;
+			}
+			
+			case servo2ID:
+			{
+				posMax = pos2Max;
+				posMin = pos2Min;			
+				break;
+			}
+			
+			case servo3ID:
+			{
+				posMax = pos3Max;
+				posMin = pos3Min;			
+				break;
+			}
+			
+			case servo4ID:
+			{
+				posMax = pos4Max;
+				posMin = pos4Min;			
+				break;
+			}
+		}
+		
+		if (value > posMax)
+			this->position_to_change = posMax;
+		else if (value < posMin)
+			this->position_to_change = posMin;
+		else
+        this->position_to_change=value;
+        
+        */
+
+        
         this->position_to_change = value;
         dynamixel_servos::CommandMessage CommandMessage;
         CommandMessage.servo_id = this->id;
         CommandMessage.register_address = 116;
         CommandMessage.bytes_number = 4;
-        CommandMessage.value = (int)((value - posBias) / posMul);
+        CommandMessage.value = (int)((this->position_to_change - posBias) / posMul);
         publisher_to_servo.publish(CommandMessage);
     }
 }
@@ -87,13 +161,18 @@ void dynamixelServo::set_torque_to_change(float value)
 {
     if(this->enable)
     {
+        if (value > 1)
+			this->torque_to_change = 1;
+		else if (value < 0)
+			this->torque_to_change = 0;
+		else
         this->torque_to_change=value;
 
         dynamixel_servos::CommandMessage CommandMessage;
         CommandMessage.servo_id = this->id;
         CommandMessage.register_address = 102;
         CommandMessage.bytes_number = 2;
-        CommandMessage.value = (int)(value / torqMul);
+        CommandMessage.value = (int)(this->torque_to_change / torqMul);
         publisher_to_servo.publish(CommandMessage);
     }
 }
@@ -223,35 +302,13 @@ void receive_msg_from_ros(const open_hand_controller::ros_to_contr& msg)
     Servo[2].set_position_to_change(msg.Finger3Position);
     Servo[3].set_position_to_change(msg.FingersRotationPosition);
 
-
-    if (msg.Finger1Torque > 1)
-        Servo[0].set_torque_to_change(1);
-    else if (msg.Finger1Torque <0)
-        Servo[0].set_torque_to_change(0);
-    else
-        Servo[0].set_torque_to_change((float)msg.Finger1Torque);
-
-    if (msg.Finger2Torque > 1)
-        Servo[1].set_torque_to_change(1);
-    else if (msg.Finger2Torque <0)
-        Servo[1].set_torque_to_change(0);
-    else
-        Servo[1].set_torque_to_change((float)msg.Finger2Torque);
-
-    if (msg.Finger3Torque > 1)
-        Servo[2].set_torque_to_change(1);
-    else if (msg.Finger3Torque <0)
-        Servo[2].set_torque_to_change(0);
-    else
-        Servo[2].set_torque_to_change((float)msg.Finger3Torque);
-
-    if (msg.FingersRotationTorque > 1)
-        Servo[3].set_torque_to_change(1);
-    else if (msg.FingersRotationTorque <0)
-        Servo[3].set_torque_to_change(0);
-    else
-        Servo[3].set_torque_to_change((float)msg.FingersRotationTorque);
+    Servo[0].set_torque_to_change((float)msg.Finger1Torque);
+    Servo[1].set_torque_to_change((float)msg.Finger2Torque);
+    Servo[2].set_torque_to_change((float)msg.Finger3Torque);
+    Servo[3].set_torque_to_change((float)msg.FingersRotationTorque);
+    
 }
+
 
 void receive_msg_from_servo(const dynamixel_servos::InfoMessage& msg)
  {
