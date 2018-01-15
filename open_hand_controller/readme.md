@@ -33,6 +33,11 @@ Dodatkowo w pakiecie znajdują się dwa węzły ros test_talker i test_listener.
 ### open_hand_controller
 Węzeł w komunikacji z końcówką manipulatora wykorzystuje przygotowane w osobnym pakiecie wiadomości oraz topic'i. Ta część działania programu została dopasowana do działającego projektu. W momencie odebrania wiadomości od elementu wykonawczego następuje aktualizacja danych przechowywanych na temat stanu serwomechanizmów.
 
+W celu uruchomienia kontrolera należy użyć polecenia:
+```
+$ rosrun open_hand_controller open_hand_controller
+```
+
 Do komunikacji z systemem ROS zostały zaprojektowane dwie osobne wiadomości ros_to_contr oraz contr_to_ros, posiadające strukturę adekwatną do realizowanych zadań. Dodatkowo z chwytakiem można komunikować się za pomocą wiadomości close_hand.
 ```
 ros_to_contr
@@ -99,4 +104,14 @@ test_listener po uruchomieniu wyświetla ostatnio przesłaną wiadomość do sys
 test_talker posiada intefejs pozwalający na bezpośrednie wprowadzanie danych jakie mają zostać wysłane do serwomechanizmu. W celu obserwacji zmian zaleca się otwarcie nowego okna w konsoli i użycie komendy:
 ```
 $ rostopic echo /servo_control_commands 
+```
+
+Aby uruchomić węzły testowe należy użyć komendy:
+W celu uruchomienia kontrolera należy użyć polecenia:
+```
+$ rosrun open_hand_controller test_talker
+```
+w osobnym oknie:
+```
+$ rosrun open_hand_controller test_listener
 ```
