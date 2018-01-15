@@ -25,8 +25,8 @@ void receive_msg_from_contr(const open_hand_controller::contr_to_ros& msg)
 {
     printf("\033c");
     cout << setprecision(2) << fixed;
-    cout<<"Servo 1:"<<endl<<"Position:\t"<<(float)msg.Position1<<endl<<"Velocity:\t"<<(float)msg.Velocity1<<endl<<"Torque:\t\t"<<msg.Torque1<<endl<<endl;
-    cout<<"Servo 2:"<<endl<<"Position:\t"<<(float)msg.Position2<<endl<<"Velocity:\t"<<(float)msg.Velocity2<<endl<<"Torque:\t\t"<<msg.Torque2<<endl<<endl;
-    cout<<"Servo 3:"<<endl<<"Position:\t"<<(float)msg.Position3<<endl<<"Velocity:\t"<<(float)msg.Velocity3<<endl<<"Torque:\t\t"<<msg.Torque3<<endl<<endl;
-    cout<<"Servo 4:"<<endl<<"Position:\t"<<(float)msg.Position4<<endl<<"Velocity:\t"<<(float)msg.Velocity4<<endl<<"Torque:\t\t"<<msg.Torque4<<endl<<endl;
+    cout<<"Servo 1:"<<endl<<"Position:\t"<<(float)msg.Finger1Position<<endl<<"Velocity:\t"<<(float)msg.Finger1Velocity<<endl<<"Torque:\t\t"<<msg.Finger1Torque<<endl<<endl;
+    cout<<"Servo 2:"<<endl<<"Position:\t"<<(float)msg.Finger2Position<<endl<<"Velocity:\t"<<(float)msg.Finger2Velocity<<endl<<"Torque:\t\t"<<msg.Finger2Torque<<endl<<endl;
+    cout<<"Servo 3:"<<endl<<"Position:\t"<<(float)msg.Finger3Position<<endl<<"Velocity:\t"<<(float)msg.Finger3Velocity<<endl<<"Torque:\t\t"<<msg.Finger3Torque<<endl<<endl;
+    cout<<"Servo 4:"<<endl<<"Position:\t"<<(float)msg.FingersRotationPosition<<endl<<"Velocity:\t"<<(float)msg.FingersRotationVelocity<<endl<<"Torque:\t\t"<<msg.FingersRotationTorque<<endl<<endl;
 }

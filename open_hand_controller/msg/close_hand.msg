@@ -1,0 +1,2 @@
+bool FingersClose
+float64 FingersTorque

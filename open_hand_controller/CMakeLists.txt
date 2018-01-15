@@ -50,6 +50,7 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
     ros_to_contr.msg 
     contr_to_ros.msg
+    close_hand.msg
  )
  
   include_directories(include ${catkin_INCLUDE_DIRS})

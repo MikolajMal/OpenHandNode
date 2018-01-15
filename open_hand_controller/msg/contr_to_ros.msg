@@ -1,14 +1,14 @@
-float64 Position1
-float64 Position2
-float64 Position3
-float64 Position4
+float64 Finger1Position
+float64 Finger2Position
+float64 Finger3Position
+float64 FingersRotationPosition
 
-float64 Velocity1
-float64 Velocity2
-float64 Velocity3
-float64 Velocity4
+float64 Finger1Velocity
+float64 Finger2Velocity
+float64 Finger3Velocity
+float64 FingersRotationVelocity
 
-float64 Torque1
-float64 Torque2
-float64 Torque3
-float64 Torque4
+float64 Finger1Torque
+float64 Finger2Torque
+float64 Finger3Torque
+float64 FingersRotationTorque

@@ -24,55 +24,55 @@ int main(int argc, char **argv)
 
         cout<<"Servo 1:"<<endl<<"Position:\t";
         cin>>value;
-        msg.Position1=value;
+        msg.Finger1Position=value;
 
         cout<<"Torque:\t\t";
         cin>>value;
-        msg.Torque1=value;
+        msg.Finger1Torque=value;
 
         cout<<"Enable(t/n):\t";
         cin>>enable;
-        if(enable=='t' || enable=='T') msg.enable1=true;
-        else msg.enable1=false;
+        if(enable=='t' || enable=='T') msg.Finger1Enable=true;
+        else msg.Finger1Enable=false;
 
         cout<<endl<<endl<<"Servo 2:"<<endl<<"Position:\t";
         cin>>value;
-        msg.Position2=value;
+        msg.Finger2Position=value;
 
         cout<<"Torque:\t\t";
         cin>>value;
-        msg.Torque2=value;
+        msg.Finger2Torque=value;
 
         cout<<"Enable(t/n):\t";
         cin>>enable;
-        if(enable=='t' || enable=='T') msg.enable2=true;
-        else msg.enable2=false;
+        if(enable=='t' || enable=='T') msg.Finger2Enable=true;
+        else msg.Finger2Enable=false;
 
         cout<<endl<<endl<<"Servo 3:"<<endl<<"Position:\t";
         cin>>value;
-        msg.Position3=value;
+        msg.Finger3Position=value;
 
         cout<<"Torque:\t\t";
         cin>>value;
-        msg.Torque3=value;
+        msg.Finger3Torque=value;
 
         cout<<"Enable(t/n):\t";
         cin>>enable;
-        if(enable=='t' || enable=='T') msg.enable3=true;
-        else msg.enable3=false;
+        if(enable=='t' || enable=='T') msg.Finger3Enable=true;
+        else msg.Finger3Enable=false;
 
         cout<<endl<<endl<<"Servo 4:"<<endl<<"Position:\t";
         cin>>value;
-        msg.Position4=value;
+        msg.FingersRotationPosition=value;
 
         cout<<"Torque:\t\t";
         cin>>value;
-        msg.Torque4=value;
+        msg.FingersRotationTorque=value;
 
         cout<<"Enable(t/n):\t";
         cin>>enable;
-        if(enable=='t' || enable=='T') msg.enable4=true;
-        else msg.enable4=false;
+        if(enable=='t' || enable=='T') msg.FingersRotationEnable=true;
+        else msg.FingersRotationEnable=false;
 
         publisher_to_contr.publish(msg);
         loop_rate.sleep();
