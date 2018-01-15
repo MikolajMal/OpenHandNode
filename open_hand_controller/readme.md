@@ -33,55 +33,68 @@ Dodatkowo w pakiecie znajdują się dwa węzły ros test_talker i test_listener.
 ### open_hand_controller
 Węzeł w komunikacji z końcówką manipulatora wykorzystuje przygotowane w osobnym pakiecie wiadomości oraz topic'i. Ta część działania programu została dopasowana do działającego projektu. W momencie odebrania wiadomości od elementu wykonawczego następuje aktualizacja danych przechowywanych na temat stanu serwomechanizmów.
 
-Do komunikacji z systemem ROS zostały zaprojektowane dwie osobne wiadomości ros_to_contr oraz contr_to_ros, posiadające strukturę adekwatną do realizowanych zadań
+Do komunikacji z systemem ROS zostały zaprojektowane dwie osobne wiadomości ros_to_contr oraz contr_to_ros, posiadające strukturę adekwatną do realizowanych zadań. Dodatkowo z chwytakiem można komunikować się za pomocą wiadomości close_hand.
 ```
 ros_to_contr
 
-float64 Position1
-float64 Position2
-float64 Position3
-float64 Position4
+float64 Finger1Position
+float64 Finger2Position
+float64 Finger3Position
+float64 FingersRotationPosition
 
-float64 Torque1
-float64 Torque2
-float64 Torque3
-float64 Torque4
+float64 Finger1Torque
+float64 Finger2Torque
+float64 Finger3Torque
+float64 FingersRotationTorque
 
-bool enable1
-bool enable2
-bool enable3
-bool enable4
+bool Finger1Enable
+bool Finger2Enable
+bool Finger3Enable
+bool FingersRotationEnable
 ```
+Chcąc zmienić pozycję zadaną należy w polu Finger_x_Position (gdzie _x_ to nr serwomechanizmu) podać odpowiednią wartość w radianach oraz aktywować odpowiedni serwomechanizm w polu Finger_x_Enable.
+
+Ponieważ serwomechanizmy pracują w trybie sterowania pozycją i momentem, należy podać również wartość momentu maksymalnego jaki będzie mógł zostać użyty do wykonania danego ruchu. Wartośc ta powinna zawierać się w przedziale od 0 do 1.
+
+
+Dane do serwomechanizmów należy wysyłać w momencie, kiedy zależy nam na zmianie któregoś z parametrów. Program jest zabezpieczony przed niektórymi przypadkami złego sformułowania wiadomości. 
 
 ```
 contr_to_ros
 
-float64 Position1
-float64 Position2
-float64 Position3
-float64 Position4
+float64 Finger1Position
+float64 Finger2Position
+float64 Finger3Position
+float64 FingersRotationPosition
 
-float64 Velocity1
-float64 Velocity2
-float64 Velocity3
-float64 Velocity4
+float64 Finger1Velocity
+float64 Finger2Velocity
+float64 Finger3Velocity
+float64 FingersRotationVelocity
 
-float64 Torque1
-float64 Torque2
-float64 Torque3
-float64 Torque4
+float64 Finger1Torque
+float64 Finger2Torque
+float64 Finger3Torque
+float64 FingersRotationTorque
 ```
 
-Dane z serwomechanizmów są wysyłane przez węzeł z częstotliwością 10Hz.
+Wiadomości contr_to_ros są wysyłane z częstotliwością 10Hz. W przypadku z jakiegoś powodu przerwanie z serwomechanizmem zostanie przerwane, w wiadomościach będą przesyłane ostatnio zaktualizowane dane na temat stanu mechanizmu.
 
-Dane do serwomechanizmów należy wysyłać w momencie, kiedy zależy nam na zmianie któregoś z parametrów. Program jest zabezpieczony przed niektówymi przypadkami złego sformułowania wiadomości. Chcąc zmienić pozycję zadaną należy w polu Positionx (gdzie x to nr serwomechanizmu) podać odpowiednią wartość w radianach oraz aktywować odpowiedni serwomechanizm w polu enablex. 
+Wartości Position zawierają kąt w radianach, Velocity aktualną prędkość w poszczegónych napędach, a Torque aktualny moment na wale wyskalowany do wartości od 0 do 1.
 
-Pole Positionx jest jedynym polem, którego edycja musi być przeprowadzona łącznie z polem enablex, aby uzyskać pożądany efekt. Wynika to z specyfiki działania układu.
+```
+close_hand
+
+bool FingersClose
+float64 FingersTorque
+```
+
+Wiadomość close_hand jest wysyłana do kontrolera w celu zamknięcia (true) lub otwarcia (false) chwytaka za pomocą jednej komendy. Dodatkowym parametrem jest maksymalny moment jaki może zostać użyty do tej operacji
 
 ### test_talker oraz test_listener
 Oba wezły działają na podstawie topic'ów łączących węzeł open_hand_controller z systemem ROS.
 
-test_listener po uruchomieniu wyświetla ostatnio przesłaną wiadomość do systemu ROS w kpnsoli.
+test_listener po uruchomieniu wyświetla ostatnio przesłaną wiadomość do systemu ROS w konsoli.
 
 test_talker posiada intefejs pozwalający na bezpośrednie wprowadzanie danych jakie mają zostać wysłane do serwomechanizmu. W celu obserwacji zmian zaleca się otwarcie nowego okna w konsoli i użycie komendy:
 ```
