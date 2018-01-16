@@ -94,7 +94,10 @@ bool FingersClose
 float64 FingersTorque
 ```
 
-Wiadomość close_hand jest wysyłana do kontrolera w celu zamknięcia (true) lub otwarcia (false) chwytaka za pomocą jednej komendy. Dodatkowym parametrem jest maksymalny moment jaki może zostać użyty do tej operacji
+Wiadomość close_hand jest wysyłana do kontrolera w celu zamknięcia (true) lub otwarcia (false) chwytaka za pomocą jednej komendy. Dodatkowym parametrem jest maksymalny moment jaki może zostać użyty do tej operacji. Przykład użycia poprzez wywołanie w konsoli (zamknięcie szczęk z momentem o wartości 10% maksymalnego):
+```
+$ rostopic pub /close_hand open_hand_controller/close_hand "FingersClose: true FingersTorque: 0.1"
+```
 
 ### test_talker oraz test_listener
 Oba wezły działają na podstawie topic'ów łączących węzeł open_hand_controller z systemem ROS.
@@ -115,3 +118,4 @@ w osobnym oknie:
 ```
 $ rosrun open_hand_controller test_listener
 ```
+

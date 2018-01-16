@@ -7,38 +7,47 @@
 #include <iostream>
 
 
+/*
 #define servo1ID 21  // First finger
 #define servo2ID 22  // Seccond finger
 #define servo3ID 23  // Third finger
 #define servo4ID 24  // Fingers rotation
+*/
 
-#define posMul 0.001533981
-#define posBias 0
+#define servo1ID 24  // First finger
+#define servo2ID 23  // Seccond finger
+#define servo3ID 22  // Third finger
+#define servo4ID 21  // Fingers rotation
+
+#define posWirstMul 0.001047197
+#define posFingersMul 0.001762977
 #define velMul 0.02398
 #define torqMul 0.0008382
 
-#define posMax 3.14
-#define posMin 0
+#define pos1Bias 0
+#define pos2Bias 2.08
+#define pos3Bias -0.23
+#define pos4Bias 0
 
 /*
-Wersja z osobnymi ograniczeniami dla kazdego serwa
+wersja z pojedynczym ograniczeniem
+#define posMax 3.14
+#define posMin 0*/
 
-#define pos1Max 3.14
+/*
+Wersja z osobnymi ograniczeniami dla kazdego serwa*/
+#define pos1Max 3.14 //1240
 #define pos1Min 0
-
 #define pos2Max 3.14
 #define pos2Min 0
-
 #define pos3Max 3.14
 #define pos3Min 0
-
-#define pos4Max 3.14
+#define pos4Max 1.6 //1600
 #define pos4Min 0
 
-*/
 
-#define open_position 3
-#define close_position 4
+#define open_position 0
+#define close_position 1.8
 
 using namespace std;
 
@@ -94,60 +103,72 @@ void dynamixelServo::set_position_to_change(float value)
 {
     if(this->enable)
     {
+        /*wersja z pojedynczym ograniczeniem
         if (value > posMax)
-			this->position_to_change = posMax;
-		else if (value < posMin)
-			this->position_to_change = posMin;
-		else
-        this->position_to_change=value;
+                        this->position_to_change = posMax;
+                else if (value < posMin)
+                        this->position_to_change = posMin;
+                else
+        this->position_to_change=value;*/
 
-        /*
-        Wersja z osobnymi ograniczeniami dla kazdego serwa
-        
+        /*Wersja z osobnymi ograniczeniami dla kazdego serwa */
+
         float posMax = 0;
-		float posMin = 0;
-		
-		switch(this->id)
-		{
-			case servo1ID:
-			{
-				posMax = pos1Max;
-				posMin = pos1Min;			
-				break;
-			}
-			
-			case servo2ID:
-			{
-				posMax = pos2Max;
-				posMin = pos2Min;			
-				break;
-			}
-			
-			case servo3ID:
-			{
-				posMax = pos3Max;
-				posMin = pos3Min;			
-				break;
-			}
-			
-			case servo4ID:
-			{
-				posMax = pos4Max;
-				posMin = pos4Min;			
-				break;
-			}
-		}
-		
-		if (value > posMax)
-			this->position_to_change = posMax;
-		else if (value < posMin)
-			this->position_to_change = posMin;
-		else
-        this->position_to_change=value;
-        
-        */
+                float posMin = 0;
+                float posBias = 0;
+                float posMul = 0;
 
-        
+                switch(this->id)
+                {
+                        case servo1ID:
+                        {
+                                posMax = pos1Max;
+                                posMin = pos1Min;
+                                posBias = pos1Bias;
+                                posMul = posFingersMul;
+                                break;
+                        }
+
+                        case servo2ID:
+                        {
+                                posMax = pos2Max;
+                                posMin = pos2Min;
+                                posBias = pos2Bias;
+                                posMul = -posFingersMul;
+                                break;
+                        }
+
+                        case servo3ID:
+                        {
+                                posMax = pos3Max;
+                                posMin = pos3Min;
+                                posBias = pos3Bias;
+                                posMul = posFingersMul;
+                                break;
+                        }
+
+                        case servo4ID:
+                        {
+                                posMax = pos4Max;
+                                posMin = pos4Min;
+                                posBias = pos4Bias;
+                                posMul = posWirstMul;
+                                break;
+                        }
+                }
+
+                cout<<posMax<<" xx "<<posMin<<endl;
+
+                if (value > posMax)
+                        this->position_to_change = posMax;
+                else if (value < posMin)
+                        this->position_to_change = posMin;
+                else
+        this->position_to_change=value;
+
+
+
+
         this->position_to_change = value;
         dynamixel_servos::CommandMessage CommandMessage;
         CommandMessage.servo_id = this->id;
@@ -162,10 +183,10 @@ void dynamixelServo::set_torque_to_change(float value)
     if(this->enable)
     {
         if (value > 1)
-			this->torque_to_change = 1;
-		else if (value < 0)
-			this->torque_to_change = 0;
-		else
+                        this->torque_to_change = 1;
+                else if (value < 0)
+                        this->torque_to_change = 0;
+                else
         this->torque_to_change=value;
 
         dynamixel_servos::CommandMessage CommandMessage;
@@ -199,7 +220,42 @@ void dynamixelServo::deactivate_servo()
 }
 void dynamixelServo::set_actual_position(int value)
 {
+    float posBias = 0;
+    float posMul = 0;
+
+    switch(this->id)
+    {
+            case servo1ID:
+            {
+                    posBias = pos1Bias;
+                    posMul = posFingersMul;
+                    break;
+            }
+
+            case servo2ID:
+            {
+                    posBias = pos2Bias;
+                    posMul = -posFingersMul;
+                    break;
+            }
+
+            case servo3ID:
+            {
+                    posBias = pos3Bias;
+                    posMul = posFingersMul;
+                    break;
+            }
+
+            case servo4ID:
+            {
+                    posBias = pos4Bias;
+                    posMul = posWirstMul;
+                    break;
+            }
+    }
     this->actual_position = value * posMul + posBias;
+    cout<<"aktualna pozycja:"<<id<<" "<<value<<endl;
+    if(id==24) cout<<endl;
 }
 void dynamixelServo::set_actual_velocity(int value)
 {
@@ -306,7 +362,7 @@ void receive_msg_from_ros(const open_hand_controller::ros_to_contr& msg)
     Servo[1].set_torque_to_change((float)msg.Finger2Torque);
     Servo[2].set_torque_to_change((float)msg.Finger3Torque);
     Servo[3].set_torque_to_change((float)msg.FingersRotationTorque);
-    
+
 }
 
 
@@ -393,6 +449,4 @@ void receive_msg_close_hand(const open_hand_controller::close_hand& msg)
         }
     }
 }
-
-
 
