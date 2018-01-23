@@ -1,0 +1,17 @@
+controller_list:
+  - name: fake_finger1_controller
+    joints:
+      - finger1
+  - name: fake_finger2_controller
+    joints:
+      - rotator2
+      - finger2
+  - name: fake_finger3_controller
+    joints:
+      - finger3
+  - name: fake_group1_controller
+    joints:
+      - finger1
+      - rotator2
+      - finger2
+      - finger3
