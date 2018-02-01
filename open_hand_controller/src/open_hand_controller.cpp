@@ -7,17 +7,17 @@
 #include <iostream>
 
 
-/*
+
 #define servo1ID 21  // First finger
 #define servo2ID 22  // Seccond finger
 #define servo3ID 23  // Third finger
 #define servo4ID 24  // Fingers rotation
-*/
-
+/*
 #define servo1ID 24  // First finger
 #define servo2ID 23  // Seccond finger
 #define servo3ID 22  // Third finger
 #define servo4ID 21  // Fingers rotation
+*/
 
 #define posWirstMul 0.001047197
 #define posFingersMul 0.001762977
@@ -25,9 +25,9 @@
 #define torqMul 0.0008382
 
 #define pos1Bias 0
-#define pos2Bias 2.08
-#define pos3Bias -0.23
-#define pos4Bias 0
+#define pos2Bias 0
+#define pos3Bias 1.9
+#define pos4Bias 0.88
 
 /*
 wersja z pojedynczym ograniczeniem
@@ -86,6 +86,7 @@ public:
 
     void set_publisher_to_servo(ros::Publisher& handler);
     void change_mode(int value);
+    void change_velocity(int value);
 };
 
 dynamixelServo::dynamixelServo()
@@ -134,7 +135,7 @@ void dynamixelServo::set_position_to_change(float value)
                                 posMax = pos2Max;
                                 posMin = pos2Min;
                                 posBias = pos2Bias;
-                                posMul = -posFingersMul;
+                                posMul = posFingersMul;
                                 break;
                         }
 
@@ -143,7 +144,7 @@ void dynamixelServo::set_position_to_change(float value)
                                 posMax = pos3Max;
                                 posMin = pos3Min;
                                 posBias = pos3Bias;
-                                posMul = posFingersMul;
+                                posMul = -posFingersMul;
                                 break;
                         }
 
@@ -172,6 +173,14 @@ void dynamixelServo::set_position_to_change(float value)
         this->position_to_change = value;
         dynamixel_servos::CommandMessage CommandMessage;
         CommandMessage.servo_id = this->id;
+
+        CommandMessage.register_address = 112;
+        CommandMessage.bytes_number = 4;
+        CommandMessage.value = 20;
+
+        this->publisher_to_servo.publish(CommandMessage);
+
+
         CommandMessage.register_address = 116;
         CommandMessage.bytes_number = 4;
         CommandMessage.value = (int)((this->position_to_change - posBias) / posMul);
@@ -235,14 +244,14 @@ void dynamixelServo::set_actual_position(int value)
             case servo2ID:
             {
                     posBias = pos2Bias;
-                    posMul = -posFingersMul;
+                    posMul = posFingersMul;
                     break;
             }
 
             case servo3ID:
             {
                     posBias = pos3Bias;
-                    posMul = posFingersMul;
+                    posMul = -posFingersMul;
                     break;
             }
 
@@ -254,7 +263,7 @@ void dynamixelServo::set_actual_position(int value)
             }
     }
     this->actual_position = value * posMul + posBias;
-    cout<<"aktualna pozycja:"<<id<<" "<<value<<endl;
+    //cout<<"aktualna pozycja:"<<id<<" "<<value<<endl;
     if(id==24) cout<<endl;
 }
 void dynamixelServo::set_actual_velocity(int value)
@@ -291,6 +300,17 @@ void dynamixelServo::change_mode(int value)
 
     publisher_to_servo.publish(CommandMessage);
 }
+void dynamixelServo::change_velocity(int value)
+{
+    cout<<"wyslono predkosc"<<endl;
+    dynamixel_servos::CommandMessage CommandMessage;
+    CommandMessage.servo_id = this->id;
+    CommandMessage.register_address = 112;
+    CommandMessage.bytes_number = 4;
+    CommandMessage.value = value;
+
+    this->publisher_to_servo.publish(CommandMessage);
+}
 
 
 dynamixelServo Servo[4];
@@ -322,11 +342,15 @@ int main(int argc, char **argv)
     {
         Servo[i].set_publisher_to_servo(publisher_to_servo);
         //Servo[i].change_mode(5);
+       // Servo[i].change_velocity(20);
     }
+
 
     ros::Rate loop_rate(10);
 
     open_hand_controller::contr_to_ros contr_to_ros_msg;
+
+
 
     while(ros::ok())
     {
@@ -334,6 +358,8 @@ int main(int argc, char **argv)
 
         prepare_msg_to_ros(contr_to_ros_msg);
         publisher_to_ros.publish(contr_to_ros_msg);
+
+
 
         loop_rate.sleep();
     }
@@ -352,6 +378,12 @@ void receive_msg_from_ros(const open_hand_controller::ros_to_contr& msg)
 
     if(msg.FingersRotationEnable) Servo[3].activate_servo();
     else Servo[3].deactivate_servo();
+
+
+    for(int i=0;i<4;i++)
+    {
+        Servo[i].change_velocity(20);
+    }
 
     Servo[0].set_position_to_change(msg.Finger1Position);
     Servo[1].set_position_to_change(msg.Finger2Position);
