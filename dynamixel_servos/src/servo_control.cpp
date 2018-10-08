@@ -58,11 +58,11 @@ void ServoControl::write_goal_position(uint8_t servo_id, uint32_t goal_position)
     int dxl_comm_result = packetHandler->write4ByteTxRx(portHandler, servo_id, ADDR_PRO_goal_position, goal_position, &dxl_error);
     if (dxl_comm_result != COMM_SUCCESS)
     {
-		packetHandler->printTxRxResult(dxl_comm_result);
+		//packetHandler->printTxRxResult(dxl_comm_result);
     }
     else if (dxl_error != 0)
     {
-		packetHandler->printRxPacketError(dxl_error);
+		//packetHandler->printRxPacketError(dxl_error);
     }
 	
 }
@@ -75,11 +75,11 @@ uint32_t ServoControl::read_present_position(uint8_t servo_id)
     int dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, servo_id, ADDR_PRO_present_position, (uint32_t*)& present_position, &dxl_error);
     if (dxl_comm_result != COMM_SUCCESS)
     {
-		packetHandler->printTxRxResult(dxl_comm_result);
+		//packetHandler->printTxRxResult(dxl_comm_result);
     }
     else if (dxl_error != 0)
     {
-		packetHandler->printRxPacketError(dxl_error);
+		//packetHandler->printRxPacketError(dxl_error);
     }
     
     return present_position;
@@ -95,11 +95,11 @@ uint16_t ServoControl::read_present_current(uint8_t servo_id)
     int dxl_comm_result = packetHandler->read2ByteTxRx(portHandler, servo_id, ADDR_PRO_present_current, (uint16_t*)& present_current, &dxl_error);
     if (dxl_comm_result != COMM_SUCCESS)
     {
-		packetHandler->printTxRxResult(dxl_comm_result);
+		//packetHandler->printTxRxResult(dxl_comm_result);
     }
     else if (dxl_error != 0)
     {
-		packetHandler->printRxPacketError(dxl_error);
+		//packetHandler->printRxPacketError(dxl_error);
     }
     
     return present_current;
@@ -114,11 +114,11 @@ uint32_t ServoControl::read_present_velocity(uint8_t servo_id)
     int dxl_comm_result = packetHandler->read4ByteTxRx(portHandler, servo_id, ADDR_PRO_present_velocity, (uint32_t*)& present_velocity, &dxl_error);
     if (dxl_comm_result != COMM_SUCCESS)
     {
-		packetHandler->printTxRxResult(dxl_comm_result);
+		//packetHandler->printTxRxResult(dxl_comm_result);
     }
     else if (dxl_error != 0)
     {
-		packetHandler->printRxPacketError(dxl_error);
+		//packetHandler->printRxPacketError(dxl_error);
     }
     
     return  present_velocity;
@@ -131,11 +131,11 @@ void ServoControl::enable_torque(uint8_t servo_id)
 	int dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, servo_id, ADDR_PRO_torque_enable, TORQUE_ENABLE, &dxl_error);
 	if (dxl_comm_result != COMM_SUCCESS)
     {
-		packetHandler->printTxRxResult(dxl_comm_result);
+		//packetHandler->printTxRxResult(dxl_comm_result);
     }
     else if (dxl_error != 0)
     {
-		packetHandler->printRxPacketError(dxl_error);
+		//packetHandler->printRxPacketError(dxl_error);
     }
 }
 
@@ -146,11 +146,11 @@ void ServoControl::disable_torque(uint8_t servo_id)
 	int dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, servo_id, ADDR_PRO_torque_enable, TORQUE_DISABLE, &dxl_error);
 	if (dxl_comm_result != COMM_SUCCESS)
     {
-		packetHandler->printTxRxResult(dxl_comm_result);
+		//packetHandler->printTxRxResult(dxl_comm_result);
     }
     else if (dxl_error != 0)
     {
-		packetHandler->printRxPacketError(dxl_error);
+		//packetHandler->printRxPacketError(dxl_error);
     }
 }
 
@@ -174,11 +174,11 @@ void ServoControl::write_register(uint8_t servo_id, uint8_t address, uint8_t byt
   
   if (dxl_comm_result != COMM_SUCCESS)
   {
-	packetHandler->printTxRxResult(dxl_comm_result);
+	//packetHandler->printTxRxResult(dxl_comm_result);
   }
   else if (dxl_error != 0)
   {
-	packetHandler->printRxPacketError(dxl_error);
+	//packetHandler->printRxPacketError(dxl_error);
   }
   
 }
