@@ -23,7 +23,7 @@
    <!-- common stuff -->
 <!--  <xacro:include filename="$(find puthand_driver)/description/urdf/common.gazebo.xacro" /> -->
   
- <xacro:include filename="$(find wezelROS)/description/urdf/gripper.urdf.xacro" />
+ <xacro:include filename="$(find node_yale_hand)/description/urdf/gripper.urdf.xacro" />
  
  <xacro:hand parent="ee_link" name="left_hand" side="-1">
     <origin xyz="0 0 0"  rpy= "0 1.57 0" />
